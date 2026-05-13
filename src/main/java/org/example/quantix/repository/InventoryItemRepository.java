@@ -22,4 +22,8 @@ public interface InventoryItemRepository extends JpaRepository<InventoryItem, Lo
             Integer threshold,
             Pageable pageable
     );
+
+    boolean existsBySkuIgnoreCase(String sku);
+
+    boolean existsBySkuIgnoreCaseAndIdNot(String sku, Long id);
 }
