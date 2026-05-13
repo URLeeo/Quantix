@@ -127,6 +127,21 @@ public class InventoryItemService {
         return lowStockItems.map(inventoryItemMapper::toResponse);
     }
 
+    @Transactional(readOnly = true)
+    public Page<InventoryItemResponse> getItemsByCategory(
+            String category,
+            Pageable pageable
+    ) {
+
+        Page<InventoryItem> items =
+                inventoryItemRepository.findByCategoryIgnoreCase(
+                        category,
+                        pageable
+                );
+
+        return items.map(inventoryItemMapper::toResponse);
+    }
+
     private void validateSkuForCreate(String sku) {
 
         boolean skuExists =
