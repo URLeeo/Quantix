@@ -50,15 +50,6 @@ public class InventoryItemController {
         );
     }
 
-    @GetMapping("/category")
-    public ResponseEntity<Page<InventoryItemResponse>> getItemsByCategory(
-            @RequestParam String category,
-            Pageable pageable
-    ) {
-        return ResponseEntity.ok(
-                inventoryItemService.getItemsByCategory(category, pageable)
-        );
-    }
 
     @PutMapping("/{id}")
     public ResponseEntity<InventoryItemResponse> updateItem(
