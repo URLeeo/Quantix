@@ -8,6 +8,7 @@ public class QuantixApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(QuantixApplication.class, args);
+        System.out.println("App Started...");
     }
 
 }
