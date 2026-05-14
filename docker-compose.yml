@@ -1,0 +1,71 @@
+version: '3.9'
+
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: quantix-app
+
+    ports:
+      - "8080:8080"
+
+    environment:
+      SPRING_PROFILES_ACTIVE: default
+
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+    restart: unless-stopped
+
+    networks:
+      - quantix-network
+
+
+  db:
+    image: mysql:8.0
+
+    container_name: quantix-db
+
+    ports:
+      - "3307:3306"
+
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+
+    volumes:
+      - quantix-db-data:/var/lib/mysql
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+    restart: unless-stopped
+
+    networks:
+      - quantix-network
+
+
+networks:
+  quantix-network:
+    driver: bridge
+
+
+volumes:
+  quantix-db-data:
