@@ -1,52 +1,160 @@
-# Quantix API
+# Quantix — Inventory Management API
 
-It's our project's Jira task manager------https://mammadzadaaslan05.atlassian.net/jira/software/projects/QUANTIX/boards/34?atlOrigin=eyJpIjoiMTE5NjUwNmQ1MGQ4NGE2MTgwOWY3MWU4OGQ2Njk4ZGEiLCJwIjoiaiJ9
+> Spring Boot REST API for inventory management with full CRUD, search, filtering, low-stock detection, and pagination.
 
-Quantix is a Spring Boot REST API for inventory management.
-It provides full CRUD operations for managing inventory items such as products, stock, categories, and suppliers.
+🔗 **Live API:** [https://quantix-7cav.onrender.com](https://quantix-7cav.onrender.com)
+📋 **Jira Board:** [QUANTIX Project](https://mammadzadaaslan05.atlassian.net/jira/software/projects/QUANTIX/boards/34)
 
---------------------------------------------------
-PROJECT DESCRIPTION
---------------------------------------------------
+---
 
-Quantix is an inventory management system built with Spring Boot that supports:
+## Table of Contents
 
-- Inventory item CRUD operations
-- Search by name or SKU
-- Filter by category
-- Low stock detection
-- Pagination and sorting
-- Validation handling
-- Global exception handling
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+  - [Run Locally (Maven)](#run-locally-maven)
+  - [Run with Docker](#run-with-docker)
+- [Configuration](#configuration)
+- [API Reference](#api-reference)
+- [Error Responses](#error-responses)
+- [CI/CD](#cicd)
 
---------------------------------------------------
-TECH STACK
---------------------------------------------------
+---
+
+## Features
+
+- ✅ Full CRUD for inventory items
+- 🔍 Search by name or SKU
+- 🗂️ Filter by category
+- ⚠️ Low stock detection
+- 📄 Pagination and sorting
+- 🛡️ Input validation and global exception handling
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Language | Java 17 |
+| Framework | Spring Boot |
+| Persistence | Spring Data JPA + Hibernate |
+| Database | MySQL (prod) / H2 (test) |
+| Build Tool | Maven |
+| Utilities | Lombok |
+| Containerization | Docker + Docker Compose |
+| CI | GitHub Actions |
+
+---
+
+## Project Structure
+
+```
+src/main/java/org/example/quantix/
+├── controller/
+├── service/
+├── repository/
+├── mapper/
+├── dto/
+│   ├── request/
+│   └── response/
+├── entity/
+└── exception/
+```
+
+---
+
+## Getting Started
+
+### Prerequisites
 
 - Java 17
-- Spring Boot
-- Spring Web
-- Spring Data JPA
-- Hibernate
-- MySQL / H2
-- Lombok
-- Maven
+- Maven 3.9+
+- MySQL 8.0 (or Docker)
 
---------------------------------------------------
-BASE URL
---------------------------------------------------
+### Run Locally (Maven)
 
-http://localhost:8080/api/v1/inventory-items---that will be change when we deploy the project
+```bash
+# 1. Clone the repository
+git clone https://github.com/URLeeo/Quantix.git
+cd Quantix
 
---------------------------------------------------
-API ENDPOINTS
---------------------------------------------------
+# 2. Set up your database and update application.properties (see Configuration)
 
-1. CREATE ITEM
+# 3. Build the project
+mvn clean install
 
+# 4. Run the application
+mvn spring-boot:run
+```
+
+The API will be available at `http://localhost:8080`.
+
+### Run with Docker
+
+Create a `.env` file in the project root:
+
+```env
+SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/quantixdb
+SPRING_DATASOURCE_USERNAME=root
+SPRING_DATASOURCE_PASSWORD=your_password
+MYSQL_ROOT_PASSWORD=your_password
+MYSQL_DATABASE=quantixdb
+```
+
+Then start the containers:
+
+```bash
+docker compose up --build
+```
+
+The app container waits for MySQL to be healthy before starting.
+
+### Run Tests
+
+```bash
+mvn test
+```
+
+---
+
+## Configuration
+
+Key properties in `src/main/resources/application.properties`:
+
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/quantixdb
+spring.datasource.username=root
+spring.datasource.password=your_password
+
+spring.jpa.hibernate.ddl-auto=${DDL_AUTO:update}
+spring.jpa.show-sql=${SHOW_SQL:true}
+
+server.port=${SERVER_PORT:8080}
+```
+
+A separate `application-prod.properties` and `application-test.properties` are included for environment-specific overrides.
+
+---
+
+## API Reference
+
+**Base URL (production):** `https://quantix-7cav.onrender.com/api/v1/inventory-items`  
+**Base URL (local):** `http://localhost:8080/api/v1/inventory-items`  
+**Swagger UI:** [https://quantix-7cav.onrender.com/swagger-ui.html](https://quantix-7cav.onrender.com/swagger-ui.html)
+
+---
+
+### Create Item
+
+```
 POST /api/v1/inventory-items
+```
 
-Request Body:
+**Request Body:**
+
+```json
 {
   "name": "Laptop",
   "sku": "LP-1001",
@@ -55,92 +163,98 @@ Request Body:
   "price": 1500,
   "supplierName": "Tech Supplier"
 }
+```
 
---------------------------------------------------
+---
 
-2. GET ITEM BY ID
+### Get All Items
 
-GET /api/v1/inventory-items/{id}
-
-Example:
-GET /api/v1/inventory-items/1
-
---------------------------------------------------
-
-3. GET ALL ITEMS
-
+```
 GET /api/v1/inventory-items
+```
 
-Supports:
-- search (name or sku)
-- category filter
-- pagination
-- sorting
+Supports pagination, sorting, search, and category filtering:
 
-Example:
+```
 GET /api/v1/inventory-items?page=0&size=10&sort=createdAt,desc
-
---------------------------------------------------
-
-4. SEARCH + FILTER (same endpoint)
-
 GET /api/v1/inventory-items?search=laptop
 GET /api/v1/inventory-items?category=Electronics
+```
 
---------------------------------------------------
+---
 
-5. GET ITEMS BY CATEGORY
+### Get Item by ID
 
+```
+GET /api/v1/inventory-items/{id}
+```
+
+---
+
+### Get Items by Category
+
+```
 GET /api/v1/inventory-items/category?category=Electronics
+```
 
---------------------------------------------------
+---
 
-6. UPDATE ITEM
+### Get Low Stock Items
 
-PUT /api/v1/inventory-items/{id}
-
---------------------------------------------------
-
-7. DELETE ITEM
-
-DELETE /api/v1/inventory-items/{id}
-
-Response:
-204 NO CONTENT
-
---------------------------------------------------
-
-8. LOW STOCK ITEMS
-
+```
 GET /api/v1/inventory-items/low-stock?threshold=5
+```
 
-Returns items where quantity <= threshold
+Returns all items where `quantity <= threshold`.
 
---------------------------------------------------
-VALIDATION RULES
---------------------------------------------------
+---
 
-- name: required (2-100 chars)
-- sku: required
-- category: required
-- quantity: must be >= 0
-- price: must be > 0
-- supplierName: required
+### Update Item
 
---------------------------------------------------
-ERROR RESPONSES
---------------------------------------------------
+```
+PUT /api/v1/inventory-items/{id}
+```
 
-404 NOT FOUND
+Request body follows the same structure as Create Item.
+
+---
+
+### Delete Item
+
+```
+DELETE /api/v1/inventory-items/{id}
+```
+
+**Response:** `204 No Content`
+
+---
+
+### Validation Rules
+
+| Field | Rule |
+|---|---|
+| `name` | Required, 2–100 characters |
+| `sku` | Required, must be unique |
+| `category` | Required |
+| `quantity` | Required, must be `>= 0` |
+| `price` | Required, must be `> 0` |
+| `supplierName` | Required |
+
+---
+
+## Error Responses
+
+**404 Not Found**
+```json
 {
   "status": 404,
   "error": "Not Found",
   "message": "Inventory item not found with id: 1"
 }
+```
 
---------------------------------------------------
-
-400 VALIDATION ERROR
+**400 Validation Error**
+```json
 {
   "status": 400,
   "error": "Validation Failed",
@@ -148,69 +262,30 @@ ERROR RESPONSES
     "name": "Name is required"
   }
 }
+```
 
---------------------------------------------------
-
-409 DUPLICATE SKU
+**409 Duplicate SKU**
+```json
 {
   "status": 409,
   "error": "Conflict",
   "message": "Inventory item with SKU already exists"
 }
+```
 
---------------------------------------------------
-PAGINATION EXAMPLE
---------------------------------------------------
+---
 
-GET /api/v1/inventory-items?page=0&size=5&sort=createdAt,desc
+## CI/CD
 
---------------------------------------------------
-SETUP INSTRUCTIONS
---------------------------------------------------
+GitHub Actions runs on every push and pull request to `master`:
 
-1. Clone project
-git clone https://github.com/URLeeo/Quantix.git
+1. Checks out the code
+2. Sets up JDK 17 (Temurin)
+3. Caches Maven dependencies
+4. Runs `mvn clean verify`
 
-2. Enter project
-cd quantix
+Workflow file: `.github/workflows/ci.yml`
 
-3. Build project
-mvn clean install
+---
 
-4. Run project
-mvn spring-boot:run
-
---------------------------------------------------
-APPLICATION URL
---------------------------------------------------
-
-http://localhost:8080
-
---------------------------------------------------
-RUN TESTS
---------------------------------------------------
-
-mvn test
-
---------------------------------------------------
-PROJECT STRUCTURE
---------------------------------------------------
-
-src/main/java/org/example/quantix
-
-├── controller
-├── service
-├── repository
-├── mapper
-├── dto
-│   ├── request
-│   └── response
-├── entity
-├── exception
-
---------------------------------------------------
-AUTHOR
---------------------------------------------------
-
-Quantix Inventory Management API
-Built with Spring Boot + Java 17
+*Quantix Inventory Management API — Built with Spring Boot & Java 17*
