@@ -2,7 +2,7 @@
 
 > Spring Boot REST API for inventory management with full CRUD, search, filtering, low-stock detection, and pagination.
 
-🔗 **Live API:** [https://quantix-7cav.onrender.com](https://quantix-7cav.onrender.com)
+🔗 **Live API:** [https://quantix-7cav.onrender.com](https://quantix-7cav.onrender.com)-- That can't work. That is normal because we don't have this url in controller but you can use this ----- https://quantix-7cav.onrender.com/api/v1/inventory-items
 📋 **Jira Board:** [QUANTIX Project](https://mammadzadaaslan05.atlassian.net/jira/software/projects/QUANTIX/boards/34)
 
 ---
@@ -143,6 +143,7 @@ A separate `application-prod.properties` and `application-test.properties` are i
 **Base URL (production):** `https://quantix-7cav.onrender.com/api/v1/inventory-items`  
 **Base URL (local):** `http://localhost:8080/api/v1/inventory-items`  
 **Swagger UI:** [https://quantix-7cav.onrender.com/swagger-ui.html](https://quantix-7cav.onrender.com/swagger-ui.html)
+**Postman URL:** https://mikayilquliyev16-2693251.postman.co/workspace/AZE-MOB%C4%B0LE's-Workspace~3d274641-48b4-43e2-87f2-36e5159f2dc7/request/54405569-e7b9d5b3-87ab-43a1-bc93-849a34e2383e?sideView=agentMode -- We will show it in presentation time
 
 ---
 
