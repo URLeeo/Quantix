@@ -1,5 +1,7 @@
 # Quantix API
 
+It's our project's Jira task manager------https://mammadzadaaslan05.atlassian.net/jira/software/projects/QUANTIX/boards/34?atlOrigin=eyJpIjoiMTE5NjUwNmQ1MGQ4NGE2MTgwOWY3MWU4OGQ2Njk4ZGEiLCJwIjoiaiJ9
+
 Quantix is a Spring Boot REST API for inventory management.
 It provides full CRUD operations for managing inventory items such as products, stock, categories, and suppliers.
 
